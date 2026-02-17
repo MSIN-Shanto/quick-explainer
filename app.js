@@ -109,6 +109,9 @@ function setupEventListeners() {
     
     // History
     elements.clearHistoryBtn.addEventListener('click', clearHistory);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
 }
 
 // Toggle settings panel
@@ -380,6 +383,29 @@ function setLoading(loading) {
         elements.userInput.disabled = false;
         elements.levelSelect.disabled = false;
         elements.userInput.focus();
+    }
+}
+
+// Handle keyboard shortcuts
+function handleKeyboardShortcuts(e) {
+    // Ctrl/Cmd + Enter to submit
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (!state.isExplaining && elements.userInput.value.trim()) {
+            handleExplain();
+        }
+    }
+    
+    // Ctrl/Cmd + / to toggle settings
+    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+        e.preventDefault();
+        toggleSettings();
+    }
+    
+    // Escape to close settings
+    if (e.key === 'Escape') {
+        if (elements.settingsToggle.getAttribute('aria-expanded') === 'true') {
+            toggleSettings();
+        }
     }
 }
 
