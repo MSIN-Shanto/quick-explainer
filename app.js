@@ -138,6 +138,11 @@ function applyTheme() {
     if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcons(savedTheme);
+    } else {
+        // Check system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        updateThemeIcons(prefersDark ? 'dark' : 'light');
     }
 }
 
