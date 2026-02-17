@@ -196,8 +196,15 @@ function updateClearButton() {
 // Update explain button state
 function updateExplainButton() {
     const hasInput = elements.userInput.value.trim().length > 0;
+    const isOverLimit = elements.userInput.value.length > MAX_INPUT_LENGTH;
     
-    elements.explainBtn.disabled = !hasInput;
+    elements.explainBtn.disabled = !hasInput || isOverLimit;
+    
+    if (isOverLimit && hasInput) {
+        elements.explainBtn.title = 'Input exceeds character limit';
+    } else {
+        elements.explainBtn.title = '';
+    }
 }
 
 // Handle explain request
