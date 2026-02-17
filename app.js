@@ -323,7 +323,7 @@ async function copyExplanation() {
 function addToHistory(input, explanation, model, duration) {
     const historyItem = {
         id: Date.now(),
-        input: input.substring(0, 200), // Truncate for display
+        input: input.substring(0, 200),
         explanation: explanation.substring(0, 500),
         fullInput: input,
         fullExplanation: explanation,
@@ -335,6 +335,15 @@ function addToHistory(input, explanation, model, duration) {
     
     state.history.unshift(historyItem);
     saveHistory();
+}
+
+// Retry with different level
+function retryWithLevel(newLevel) {
+    const currentLevel = elements.levelSelect.value;
+    if (newLevel !== currentLevel) {
+        elements.levelSelect.value = newLevel;
+        handleExplain();
+    }
 }
 
 // Render history
