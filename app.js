@@ -28,7 +28,8 @@ const elements = {
     retryBtn: document.querySelector('.retry-btn'),
     historySection: document.getElementById('history-section'),
     historyList: document.getElementById('history-list'),
-    clearHistoryBtn: document.getElementById('clear-history')
+    clearHistoryBtn: document.getElementById('clear-history'),
+    exportHistoryBtn: document.getElementById('export-history')
 };
 
 // Level instructions for the AI
@@ -111,6 +112,7 @@ function setupEventListeners() {
     
     // History
     elements.clearHistoryBtn.addEventListener('click', clearHistory);
+    elements.exportHistoryBtn.addEventListener('click', exportHistory);
     
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyboardShortcuts);
@@ -388,6 +390,32 @@ function clearHistory() {
         if (typeof Snackbar !== 'undefined') {
             Snackbar.add('History cleared');
         }
+    }
+}
+
+// Export history as JSON
+function exportHistory() {
+    if (state.history.length === 0) {
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add('No history to export');
+        }
+        return;
+    }
+    
+    const dataStr = JSON.stringify(state.history, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `quick-explainer-history-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    if (typeof Snackbar !== 'undefined') {
+        Snackbar.add('History exported successfully');
     }
 }
 
