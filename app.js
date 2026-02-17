@@ -16,6 +16,7 @@ const elements = {
     settingsPanel: document.getElementById('settings-panel'),
     themeToggle: document.getElementById('theme-toggle'),
     userInput: document.getElementById('user-input'),
+    clearInputBtn: document.getElementById('clear-input'),
     charCount: document.getElementById('char-count'),
     levelSelect: document.getElementById('level-select'),
     explainBtn: document.getElementById('explain-btn'),
@@ -102,6 +103,16 @@ function setupEventListeners() {
     elements.userInput.addEventListener('input', (e) => {
         updateCharCount();
         updateExplainButton();
+        updateClearButton();
+    });
+    
+    // Clear input button
+    elements.clearInputBtn.addEventListener('click', () => {
+        elements.userInput.value = '';
+        updateCharCount();
+        updateExplainButton();
+        updateClearButton();
+        elements.userInput.focus();
     });
     
     // Explain button
@@ -174,6 +185,12 @@ function updateCharCount() {
     } else {
         elements.charCount.style.color = '';
     }
+}
+
+// Update clear button visibility
+function updateClearButton() {
+    const hasContent = elements.userInput.value.length > 0;
+    elements.clearInputBtn.hidden = !hasContent;
 }
 
 // Update explain button state

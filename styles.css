@@ -333,9 +333,33 @@ main {
     position: relative;
 }
 
+.clear-input {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.clear-input:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
 textarea {
     width: 100%;
     padding: 20px;
+    padding-right: 50px;
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
