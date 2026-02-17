@@ -6,7 +6,8 @@
 // Application State
 const state = {
     history: [],
-    isExplaining: false
+    isExplaining: false,
+    cache: new Map()
 };
 
 // DOM Elements
@@ -222,6 +223,15 @@ async function handleExplain() {
 
 // Fetch explanation from Cloudflare Function
 async function fetchExplanation(userInput, level) {
+    const cacheKey = `${userInput.slice(0, 50)}-${level}`;
+    
+    if (state.cache.has(cacheKey)) {
+        const cached = state.cache.get(cacheKey);
+        if (Date.now() - cached.timestamp < 3600000) {
+            return cached.data;
+        }
+    }
+    
     const systemMessage = levelInstructions[level];
     
     const response = await fetch('/api/explain', {
@@ -251,10 +261,14 @@ async function fetchExplanation(userInput, level) {
     }
     
     const data = await response.json();
-    return {
+    const result = {
         content: data.choices[0].message.content,
         model: data.model_used || 'openai'
     };
+    
+    state.cache.set(cacheKey, { data: result, timestamp: Date.now() });
+    
+    return result;
 }
 
 // Get display name for model
