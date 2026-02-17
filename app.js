@@ -123,6 +123,10 @@ function toggleSettings() {
     const isExpanded = elements.settingsToggle.getAttribute('aria-expanded') === 'true';
     elements.settingsToggle.setAttribute('aria-expanded', !isExpanded);
     elements.settingsPanel.hidden = isExpanded;
+    
+    if (!isExpanded) {
+        setTimeout(() => elements.themeToggle.focus(), 100);
+    }
 }
 
 // Toggle theme
