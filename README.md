@@ -6,13 +6,16 @@ A beautiful, editorial-style AI-powered app that transforms complex text into cl
 
 ## Features
 
-- ✨ **Multiple explanation levels**: Simple, Detailed, or "Like I'm 5"
-- 🤖 **Dynamic model fetching**: Fetches available models from your API endpoint
-- 🌙 **Dark/Light mode**: Toggle between warm paper and sleek dark themes
-- 📚 **History**: Recent explanations saved locally (last 10 items)
-- 📋 **One-click copy**: Copy explanations instantly
-- 🔄 **Regenerate**: Try again with the same input
-- 🔒 **Privacy-first**: API key stored only in your browser (localStorage)
+- **Multiple explanation levels**: Simple, Detailed, or "Like I'm 5"
+- **Dynamic model fetching**: Fetches available models from your API endpoint
+- **Dark/Light mode**: Toggle between warm paper and sleek dark themes with system preference detection
+- **History**: Recent explanations saved locally (last 10 items)
+- **Export history**: Download your explanation history as JSON
+- **One-click copy**: Copy explanations instantly
+- **Native sharing**: Share explanations using native share on mobile devices
+- **Keyboard shortcuts**: Ctrl+Enter to submit, Ctrl+/ for settings
+- **Character limit**: Up to 5000 characters per input
+- **Privacy-first**: API key stored only in your browser (localStorage)
 
 ## Getting Started
 
