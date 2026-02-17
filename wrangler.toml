@@ -12,3 +12,9 @@ bucket = "."
 
 # Secrets to be set via: wrangler secret put API_KEY
 # API_KEY = "your-pollinations-api-key"
+
+# Custom error pages
+[[redirects]]
+from = "/404"
+to = "/index.html"
+status = 404
