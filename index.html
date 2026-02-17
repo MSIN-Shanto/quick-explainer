@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Explainer — Make Sense of Anything</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="grain-overlay"></div>
+    
+    <div class="container">
+        <header class="fade-in-up">
+            <h1 class="logo">Quick Explainer</h1>
+            <p class="tagline">Transform complexity into clarity</p>
+        </header>
+
+        <main>
+            <!-- Settings Panel -->
+            <section class="settings-section fade-in-up" style="animation-delay: 0.1s">
+                <button class="settings-toggle" aria-expanded="false" aria-controls="settings-panel">
+                    <svg class="settings-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span class="settings-text">Settings</span>
+                    <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                
+                <div id="settings-panel" class="settings-panel" hidden>
+                    <div class="settings-grid">
+                        <div class="input-group">
+                            <label for="base-url">Base URL</label>
+                            <input type="url" id="base-url" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="api-key">API Key</label>
+                            <input type="password" id="api-key" placeholder="sk-...">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="model-select">Default Model</label>
+                            <select id="model-select" disabled>
+                                <option value="">Enter API details to fetch models</option>
+                            </select>
+                            <button class="refresh-models" title="Refresh models list">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <polyline points="1 20 1 14 7 14"></polyline>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="input-group theme-toggle">
+                            <label>Theme</label>
+                            <button class="theme-btn" id="theme-toggle" title="Toggle dark mode">
+                                <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                                <svg class="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Input Section -->
+            <section class="input-section fade-in-up" style="animation-delay: 0.2s">
+                <label for="user-input" class="input-label">What would you like explained?</label>
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="user-input" 
+                        placeholder="Paste confusing text, jargon, or concepts here..."
+                        rows="6"
+                    ></textarea>
+                    <div class="char-count" id="char-count">0 characters</div>
+                </div>
+                
+                <div class="controls-row">
+                    <div class="explanation-level">
+                        <label for="level-select">Explain:</label>
+                        <select id="level-select">
+                            <option value="simple">Simply</option>
+                            <option value="detailed" selected>In Detail</option>
+                            <option value="eli5">Like I'm 5</option>
+                        </select>
+                    </div>
+                    
+                    <button class="explain-btn" id="explain-btn" disabled>
+                        <span class="btn-text">Explain It</span>
+                        <span class="btn-loading" hidden>
+                            <span class="spinner"></span>
+                            Explaining...
+                        </span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section" id="output-section" hidden>
+                <div class="output-header">
+                    <h2 class="output-title">Here's what it means</h2>
+                    <div class="output-actions">
+                        <button class="action-btn copy-btn" title="Copy explanation">
+                            <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span class="copy-text">Copy</span>
+                        </button>
+                        <button class="action-btn retry-btn" title="Regenerate explanation">
+                            <svg class="retry-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            <span class="retry-text">Try Again</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="explanation-container">
+                    <div id="explanation-output" class="explanation-text"></div>
+                </div>
+                
+                <div class="output-meta">
+                    <span class="model-used" id="model-used"></span>
+                    <span class="time-taken" id="time-taken"></span>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="history-section" id="history-section" hidden>
+                <h3 class="history-title">Recent Explanations</h3>
+                <div class="history-list" id="history-list"></div>
+                <button class="clear-history" id="clear-history">Clear History</button>
+            </section>
+        </main>
+
+        <footer class="fade-in-up" style="animation-delay: 0.3s">
+            <p>Your API key is stored locally. Never shared.</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="polite" hidden></div>
+
+    <script src="marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
