@@ -319,6 +319,24 @@ async function copyExplanation() {
     }
 }
 
+// Share explanation
+async function shareExplanation() {
+    const text = elements.explanationOutput.innerText;
+    const title = 'Quick Explainer Result';
+    
+    if (navigator.share) {
+        try {
+            await navigator.share({ title, text });
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                copyExplanation();
+            }
+        }
+    } else {
+        copyExplanation();
+    }
+}
+
 // Add to history
 function addToHistory(input, explanation, model, duration) {
     const historyItem = {
