@@ -1,0 +1,14 @@
+# Cloudflare Pages Configuration
+name = "quick-explainer"
+compatibility_date = "2024-01-01"
+
+# Build output directory
+[site]
+bucket = "."
+
+# Environment variables (set these in Cloudflare Dashboard or via wrangler secret)
+[vars]
+# No public vars needed - API key is secret
+
+# Secrets to be set via: wrangler secret put API_KEY
+# API_KEY = "your-pollinations-api-key"

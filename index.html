@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/minisnackbar/dist/minisnackbar.min.js"></script>
 </head>
 <body>
     <div class="grain-overlay"></div>
@@ -34,30 +35,6 @@
                 
                 <div id="settings-panel" class="settings-panel" hidden>
                     <div class="settings-grid">
-                        <div class="input-group">
-                            <label for="base-url">Base URL</label>
-                            <input type="url" id="base-url" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="api-key">API Key</label>
-                            <input type="password" id="api-key" placeholder="sk-...">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="model-select">Default Model</label>
-                            <select id="model-select" disabled>
-                                <option value="">Enter API details to fetch models</option>
-                            </select>
-                            <button class="refresh-models" title="Refresh models list">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="23 4 23 10 17 10"></polyline>
-                                    <polyline points="1 20 1 14 7 14"></polyline>
-                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        
                         <div class="input-group theme-toggle">
                             <label>Theme</label>
                             <button class="theme-btn" id="theme-toggle" title="Toggle dark mode">
@@ -155,12 +132,9 @@
         </main>
 
         <footer class="fade-in-up" style="animation-delay: 0.3s">
-            <p>Your API key is stored locally. Never shared.</p>
+            <p>Powered by Pollinations AI</p>
         </footer>
     </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast" role="alert" aria-live="polite" hidden></div>
 
     <script src="marked.min.js"></script>
     <script src="app.js"></script>

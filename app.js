@@ -5,10 +5,6 @@
 
 // Application State
 const state = {
-    apiKey: '',
-    baseUrl: '',
-    selectedModel: '',
-    models: [],
     history: [],
     isExplaining: false
 };
@@ -17,10 +13,6 @@ const state = {
 const elements = {
     settingsToggle: document.querySelector('.settings-toggle'),
     settingsPanel: document.getElementById('settings-panel'),
-    baseUrlInput: document.getElementById('base-url'),
-    apiKeyInput: document.getElementById('api-key'),
-    modelSelect: document.getElementById('model-select'),
-    refreshModelsBtn: document.querySelector('.refresh-models'),
     themeToggle: document.getElementById('theme-toggle'),
     userInput: document.getElementById('user-input'),
     charCount: document.getElementById('char-count'),
@@ -36,8 +28,7 @@ const elements = {
     retryBtn: document.querySelector('.retry-btn'),
     historySection: document.getElementById('history-section'),
     historyList: document.getElementById('history-list'),
-    clearHistoryBtn: document.getElementById('clear-history'),
-    toast: document.getElementById('toast')
+    clearHistoryBtn: document.getElementById('clear-history')
 };
 
 // Level instructions for the AI
@@ -50,6 +41,10 @@ const levelInstructions = {
 // Initialize App
 function init() {
     try {
+        // Initialize MiniSnackbar
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.init();
+        }
         loadSettings();
         loadHistory();
         setupEventListeners();
@@ -63,24 +58,13 @@ function init() {
 
 // Load settings from localStorage
 function loadSettings() {
-    state.baseUrl = localStorage.getItem('qe_baseUrl') || 'https://api.openai.com/v1';
-    state.apiKey = localStorage.getItem('qe_apiKey') || '';
-    state.selectedModel = localStorage.getItem('qe_selectedModel') || '';
-    
-    elements.baseUrlInput.value = state.baseUrl;
-    elements.apiKeyInput.value = state.apiKey;
-    
-    // Try to fetch models if we have both URL and key
-    if (state.apiKey && state.baseUrl) {
-        fetchModels();
-    }
+    // Theme is the only setting stored locally now
+    // API calls are handled server-side
 }
 
 // Save settings to localStorage
 function saveSettings() {
-    localStorage.setItem('qe_baseUrl', state.baseUrl);
-    localStorage.setItem('qe_apiKey', state.apiKey);
-    localStorage.setItem('qe_selectedModel', state.selectedModel);
+    // Theme is the only setting stored locally now
 }
 
 // Load history from localStorage
@@ -100,127 +84,12 @@ function saveHistory() {
     renderHistory();
 }
 
-// Fetch available models from API
-async function fetchModels() {
-    const baseUrl = elements.baseUrlInput.value.trim();
-    const apiKey = elements.apiKeyInput.value.trim();
-    
-    if (!baseUrl || !apiKey) {
-        elements.modelSelect.innerHTML = '<option value="">Enter API details to fetch models</option>';
-        elements.modelSelect.disabled = true;
-        return;
-    }
-    
-    // Show loading state
-    elements.modelSelect.innerHTML = '<option value="">Loading models...</option>';
-    elements.modelSelect.disabled = true;
-    elements.refreshModelsBtn.style.animation = 'spin 1s linear infinite';
-    
-    try {
-        const response = await fetch(`${baseUrl}/models`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch models: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Filter for chat completion models (common patterns)
-        const chatModels = data.data
-            .filter(model => {
-                const id = model.id.toLowerCase();
-                return id.includes('gpt') || 
-                       id.includes('chat') || 
-                       id.includes('claude') ||
-                       id.includes('llama') ||
-                       id.includes('deepseek') ||
-                       id.includes('glm') ||
-                       id.includes('gemini');
-            })
-            .sort((a, b) => a.id.localeCompare(b.id));
-        
-        state.models = chatModels;
-        renderModelOptions();
-        
-        showToast(`Loaded ${chatModels.length} models`);
-        
-    } catch (error) {
-        console.error('Error fetching models:', error);
-        elements.modelSelect.innerHTML = '<option value="">Error loading models. Check URL and API key.</option>';
-        showToast('Failed to fetch models. Please check your settings.', 'error');
-    } finally {
-        elements.refreshModelsBtn.style.animation = '';
-    }
-}
 
-// Render model options in select
-function renderModelOptions() {
-    const select = elements.modelSelect;
-    select.innerHTML = '';
-    
-    if (state.models.length === 0) {
-        select.innerHTML = '<option value="">No models found</option>';
-        select.disabled = true;
-        return;
-    }
-    
-    // Add default empty option
-    const emptyOption = document.createElement('option');
-    emptyOption.value = '';
-    emptyOption.textContent = 'Select a model...';
-    select.appendChild(emptyOption);
-    
-    // Group models by provider for better organization
-    state.models.forEach(model => {
-        const option = document.createElement('option');
-        option.value = model.id;
-        option.textContent = model.id;
-        
-        // Restore previously selected model if available
-        if (model.id === state.selectedModel) {
-            option.selected = true;
-        }
-        
-        select.appendChild(option);
-    });
-    
-    select.disabled = false;
-    
-    // Update button state after models are loaded
-    updateExplainButton();
-}
 
 // Setup event listeners
 function setupEventListeners() {
     // Settings toggle
     elements.settingsToggle.addEventListener('click', toggleSettings);
-    
-    // Settings inputs
-    elements.baseUrlInput.addEventListener('change', (e) => {
-        state.baseUrl = e.target.value.trim();
-        saveSettings();
-        if (state.apiKey) fetchModels();
-    });
-    
-    elements.apiKeyInput.addEventListener('change', (e) => {
-        state.apiKey = e.target.value.trim();
-        saveSettings();
-        if (state.baseUrl) fetchModels();
-    });
-    
-    elements.modelSelect.addEventListener('change', (e) => {
-        state.selectedModel = e.target.value;
-        saveSettings();
-        updateExplainButton(); // Update button when model changes
-    });
-    
-    elements.refreshModelsBtn.addEventListener('click', fetchModels);
     
     // Theme toggle
     elements.themeToggle.addEventListener('click', toggleTheme);
@@ -286,10 +155,8 @@ function updateCharCount() {
 // Update explain button state
 function updateExplainButton() {
     const hasInput = elements.userInput.value.trim().length > 0;
-    const hasApiKey = elements.apiKeyInput.value.trim().length > 0;
-    const hasModel = elements.modelSelect.value !== '';
     
-    elements.explainBtn.disabled = !hasInput || !hasApiKey || !hasModel;
+    elements.explainBtn.disabled = !hasInput;
 }
 
 // Handle explain request
@@ -306,41 +173,33 @@ async function handleExplain() {
     const level = elements.levelSelect.value;
     
     try {
-        const explanation = await fetchExplanation(userInput, level);
+        const result = await fetchExplanation(userInput, level);
         const duration = ((Date.now() - startTime) / 1000).toFixed(1);
         
-        displayExplanation(explanation, duration);
-        addToHistory(userInput, explanation, duration);
+        displayExplanation(result.content, result.model, duration);
+        addToHistory(userInput, result.content, result.model, duration);
         
     } catch (error) {
         console.error('Explanation error:', error);
-        showToast(error.message || 'Failed to get explanation. Please try again.', 'error');
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add(error.message || 'Failed to get explanation. Please try again.', null, 5000);
+        }
     } finally {
         state.isExplaining = false;
         setLoading(false);
     }
 }
 
-// Fetch explanation from API
+// Fetch explanation from Cloudflare Function
 async function fetchExplanation(userInput, level) {
-    const model = elements.modelSelect.value || state.selectedModel;
-    
-    if (!model) {
-        throw new Error('Please select a model in settings');
-    }
-    
     const systemMessage = levelInstructions[level];
-    const baseUrl = elements.baseUrlInput.value.trim() || state.baseUrl;
-    const apiKey = elements.apiKeyInput.value.trim() || state.apiKey;
     
-    const response = await fetch(`${baseUrl}/chat/completions`, {
+    const response = await fetch('/api/explain', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            model: model,
             messages: [
                 {
                     role: 'system',
@@ -358,20 +217,29 @@ async function fetchExplanation(userInput, level) {
     
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `API error: ${response.status}`);
+        throw new Error(errorData.error || `API error: ${response.status}`);
     }
     
     const data = await response.json();
-    return data.choices[0].message.content;
+    return {
+        content: data.choices[0].message.content,
+        model: data.model_used || 'openai'
+    };
+}
+
+// Get display name for model
+function getModelDisplayName(modelId) {
+    if (modelId === 'openai') return 'GPT-5 Mini';
+    return modelId;
 }
 
 // Display explanation with markdown parsing
-function displayExplanation(explanation, duration) {
+function displayExplanation(explanation, model, duration) {
     elements.explanationOutput.innerHTML = '';
     elements.outputSection.hidden = false;
     elements.outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     
-    elements.modelUsed.textContent = `Model: ${state.selectedModel}`;
+    elements.modelUsed.textContent = getModelDisplayName(model);
     elements.timeTaken.textContent = `${duration}s`;
     
     // Parse markdown using marked library
@@ -399,7 +267,9 @@ async function copyExplanation() {
             <span class="copy-text">Copied!</span>
         `;
         
-        showToast('Explanation copied to clipboard');
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add('Explanation copied to clipboard');
+        }
         
         setTimeout(() => {
             elements.copyBtn.classList.remove('copied');
@@ -413,20 +283,22 @@ async function copyExplanation() {
         }, 2000);
         
     } catch (err) {
-        showToast('Failed to copy. Please try manually.', 'error');
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add('Failed to copy. Please try manually.', null, 5000);
+        }
     }
 }
 
 // Add to history
-function addToHistory(input, explanation, duration) {
+function addToHistory(input, explanation, model, duration) {
     const historyItem = {
         id: Date.now(),
         input: input.substring(0, 200), // Truncate for display
         explanation: explanation.substring(0, 500),
         fullInput: input,
         fullExplanation: explanation,
+        model: model,
         level: elements.levelSelect.value,
-        model: state.selectedModel,
         duration: duration,
         timestamp: new Date().toISOString()
     };
@@ -452,7 +324,7 @@ function renderHistory() {
             <div class="history-input">${escapeHtml(item.input)}${item.fullInput.length > 200 ? '...' : ''}</div>
             <div class="history-meta">
                 <span>${formatDate(item.timestamp)}</span>
-                <span>${item.model}</span>
+                <span>${getModelDisplayName(item.model)}</span>
             </div>
         `;
         
@@ -473,7 +345,7 @@ function loadHistoryItem(index) {
         gfm: true
     });
     
-    elements.modelUsed.textContent = `Model: ${item.model}`;
+    elements.modelUsed.textContent = getModelDisplayName(item.model);
     elements.timeTaken.textContent = `${item.duration}s`;
     
     elements.outputSection.hidden = false;
@@ -489,7 +361,9 @@ function clearHistory() {
         state.history = [];
         localStorage.removeItem('qe_history');
         renderHistory();
-        showToast('History cleared');
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add('History cleared');
+        }
     }
 }
 
@@ -509,29 +383,7 @@ function setLoading(loading) {
     }
 }
 
-// Show toast notification
-function showToast(message, type = 'success') {
-    elements.toast.textContent = message;
-    elements.toast.className = 'toast';
-    
-    if (type === 'error') {
-        elements.toast.classList.add('error');
-    }
-    
-    elements.toast.hidden = false;
-    
-    // Trigger animation
-    requestAnimationFrame(() => {
-        elements.toast.classList.add('show');
-    });
-    
-    setTimeout(() => {
-        elements.toast.classList.remove('show');
-        setTimeout(() => {
-            elements.toast.hidden = true;
-        }, 300);
-    }, 3000);
-}
+
 
 // Utility: Escape HTML
 function escapeHtml(text) {
