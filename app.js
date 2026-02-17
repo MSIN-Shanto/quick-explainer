@@ -293,6 +293,13 @@ function displayExplanation(explanation, model, duration) {
     });
     
     elements.explanationOutput.innerHTML = htmlContent;
+    
+    // Add fade-in animation
+    elements.explanationOutput.style.opacity = 0;
+    requestAnimationFrame(() => {
+        elements.explanationOutput.style.transition = 'opacity 0.3s ease';
+        elements.explanationOutput.style.opacity = 1;
+    });
 }
 
 // Copy explanation to clipboard
