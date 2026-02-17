@@ -38,6 +38,8 @@ const levelInstructions = {
     eli5: 'Explain this like you\'re talking to a 5-year-old. Use very simple concepts, analogies, and avoid all technical terms. Be playful and engaging.'
 };
 
+const MAX_INPUT_LENGTH = 5000;
+
 // Initialize App
 function init() {
     try {
@@ -152,7 +154,14 @@ function updateThemeIcons(theme) {
 // Update character count
 function updateCharCount() {
     const count = elements.userInput.value.length;
-    elements.charCount.textContent = `${count} character${count !== 1 ? 's' : ''}`;
+    const remaining = MAX_INPUT_LENGTH - count;
+    elements.charCount.textContent = `${count} / ${MAX_INPUT_LENGTH} character${count !== 1 ? 's' : ''}`;
+    
+    if (remaining < 100) {
+        elements.charCount.style.color = 'var(--accent)';
+    } else {
+        elements.charCount.style.color = '';
+    }
 }
 
 // Update explain button state
@@ -168,6 +177,13 @@ async function handleExplain() {
     
     const userInput = elements.userInput.value.trim();
     if (!userInput) return;
+    
+    if (userInput.length > MAX_INPUT_LENGTH) {
+        if (typeof Snackbar !== 'undefined') {
+            Snackbar.add(`Input exceeds maximum length of ${MAX_INPUT_LENGTH} characters`, null, 5000);
+        }
+        return;
+    }
     
     state.isExplaining = true;
     setLoading(true);
