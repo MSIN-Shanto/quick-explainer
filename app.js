@@ -236,8 +236,17 @@ async function handleExplain() {
         
     } catch (error) {
         console.error('Explanation error:', error);
+        
+        let errorMessage = 'Failed to get explanation. Please try again.';
+        
+        if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+            errorMessage = 'Network error. Please check your connection.';
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
         if (typeof Snackbar !== 'undefined') {
-            Snackbar.add(error.message || 'Failed to get explanation. Please try again.', null, 5000);
+            Snackbar.add(errorMessage, null, 5000);
         }
     } finally {
         state.isExplaining = false;
