@@ -1,6 +1,6 @@
 # Quick Explainer
 
-A beautiful, editorial-style AI-powered app that transforms complex text into clear, simple explanations.
+A beautiful, editorial-style app powered by pollinations.ai, that transforms complex text into clear, simple explanations.
 
 ![Screenshot](screenshot.png)
 
